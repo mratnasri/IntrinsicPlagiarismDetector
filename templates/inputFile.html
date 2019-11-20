@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>upload</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <h1 align="center">Intrinsic Plagiarism Detector</h1>
+    <br />
+    <h4 align="center">
+      Upload the text file ('.txt' file) which has to be checked for plagiarism.
+    </h4>
+    <br />
+    <form
+      class="form-horizontal"
+      action="/output"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-3">
+          <input
+            placeholder="Upload file"
+            class="form-control"
+            id="file"
+            name="file"
+            type="file"
+            accept=".txt"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8">
+          <button type="Submit" class="btn btn-default">Upload</button>
+        </div>
+      </div>
+    </form>
+  </body>
+</html>
