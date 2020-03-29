@@ -11,3 +11,4 @@ Research in automatic text plagiarism detection focuses on algorithms that compa
 How likely is the fact that a document d contains a section of another author. We expect that the lengths, the places, and the entire fraction h of such sections depend on particular document characteristics. Hence it makes sense to analyze the document type (paper, dissertation), its genre (novel, factual report, research, dictionary entry), but also the issuing institution (university, company, public service). Algorithmic means to reveal such information interpret document lengths, genres, and occurring named entities.
 Table 2 compiles an overview of important stylometric features that have been proposed so far. we distinguish between lexical features (character-based and wordbased), syntactic features, and structural features. Our overview is restricted to the well-known style features and omits esoteric variants.
 
+    jghufvovjgubuo;giufgujb
