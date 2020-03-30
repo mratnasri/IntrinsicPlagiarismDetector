@@ -1,3 +1,2 @@
-word_tokenize
-pos_tag
-map_tag
+nltk.tag
+nltk.tokenize
