@@ -1,3 +1,4 @@
 punkt
+averaged_perceptron_tagger
 nltk.tokenize
 nltk.tag
