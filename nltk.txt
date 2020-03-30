@@ -1,2 +1,3 @@
-tag
 word_tokenize
+pos_tag
+map_tag
