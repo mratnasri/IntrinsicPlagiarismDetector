@@ -20,7 +20,7 @@ def plagiarismDetection():
 
     # Reading the text file
 
-        fo=open(f.filename,"rb")
+        fo=open(f.filename,"r")
         item=fo.read()
         #print(item)
         fo.close()
