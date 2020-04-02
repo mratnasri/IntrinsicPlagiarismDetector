@@ -1,8 +1,12 @@
 import re
 import numpy as np
+import pandas as pd
 import nltk
 import os
-from sklearn.cluster import KMeans
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler 
+from sklearn.preprocessing import normalize 
+from sklearn.decomposition import PCA 
 from matplotlib import pyplot as plt
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -93,39 +97,60 @@ def plagiarismDetection():
         new=np.delete(new,0,axis=1)
 
 
-        kmeans=KMeans(n_clusters=5).fit(new)
+        # kmeans=KMeans(n_clusters=5).fit(new)
 
-        labels=list(kmeans.labels_)
-        print(labels)
+       # labels=list(kmeans.labels_)
+        #print(labels)
         #print(kmeans.cluster_centers_)
 
         #plt.figure(figsize=(10,10))
 
+        # Scaling the data to bring all the attributes to a comparable level 
+        scaler = StandardScaler() 
+        X_scaled = scaler.fit_transform(new) 
+
+        # Normalizing the data so that  
+        # the data approximately follows a Gaussian distribution 
+        X_normalized = normalize(X_scaled) 
+
+        # Converting the numpy array into a pandas DataFrame 
+        X_normalized = pd.DataFrame(X_normalized) 
+        pca = PCA(n_components = 2) 
+        X_principal = pca.fit_transform(X_normalized)
+        X_principal = pd.DataFrame(X_principal) 
+        X_principal.columns = ['P1', 'P2'] 
+
+
+        db_default = DBSCAN(eps = 0.0375, min_samples = 3).fit(X_principal) 
+        labels_ = db_default.labels_ 
+
+        labels=list(labels_)
+
         #plt.subplot(2,2,1)
         plt.figure(num=0)
-        plt.scatter(new[:,2],new[:,0], c=kmeans.labels_, cmap='rainbow')
+        plt.scatter(new[:,2],new[:,0], c=labels_, cmap='rainbow')
         plt.title('Pronoun')
         plt.xlabel('sentence length')
         plt.ylabel('pronoun')
-        plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,0], color='black')
+        #plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,0], color='black')
         plt.savefig('static/fig0.png')
 
         #plt.subplot(2,2,2)
         plt.figure(num=1)
-        plt.scatter(new[:,2],new[:,1], c=kmeans.labels_, cmap='rainbow')
+        plt.scatter(new[:,2],new[:,1], c=labels_, cmap='rainbow')
         plt.title('Punctuation')
         plt.xlabel('sentence length')
         plt.ylabel('punctuation')
-        plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,1], color='black')
+        #plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,1], color='black')
         plt.savefig('static/fig1.png')
 
         #plt.subplot(2,2,3)
         plt.figure(num=2)
-        plt.scatter(new[:,2],new[:,3], c=kmeans.labels_, cmap='rainbow')
+        plt.scatter(new[:,2],new[:,3], c=labels_, cmap='rainbow')
         plt.title('Determiner')
         plt.xlabel('sentence length')
         plt.ylabel('determiner')
-        plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,3], color='black')
+        #plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,3], color='black')
         plt.savefig('static/fig2.png')
 
         #plt.tight_layout()
