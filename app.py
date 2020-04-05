@@ -99,7 +99,7 @@ def plagiarismDetection():
 
         # Compute DBSCAN
         X=new
-        db = DBSCAN(eps=0.5, min_samples=5).fit(X)
+        db = DBSCAN(eps=1, min_samples=3).fit(X)
         #core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
         core_samples_mask= np.zeros(len(db.labels_),dtype=bool)
         for ele in db.core_sample_indices_:
@@ -173,7 +173,10 @@ def plagiarismDetection():
         fig0.clf()
         fig1.clf()
         fig2.clf()
-        max=np.argmax(clusterFrequency)
+        if(n_clusters!=0):
+            max=np.argmax(clusterFrequency)
+        else:
+            max= 0
         for i in range(len(labels)):
             if(labels[i]==-1):
                 print(segments[i])
