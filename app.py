@@ -4,12 +4,13 @@ import pandas as pd
 import nltk
 import os
 from sklearn.cluster import DBSCAN
-from sklearn.preprocessing import StandardScaler 
-from sklearn.preprocessing import normalize 
-from sklearn.decomposition import PCA 
+from sklearn import metrics
+from sklearn.datasets import make_blobs
+from sklearn.preprocessing import StandardScaler
 from matplotlib import pyplot as plt
 from flask import Flask, render_template, request
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route('/')  
 def upload():  
@@ -54,7 +55,7 @@ def plagiarismDetection():
             posTagged = pos_tag(text)
             simplifiedTags = [(word, map_tag('en-ptb', 'universal', tag)) for word, tag in posTagged]
             listOfPartsOfSpeechWithWords.append(simplifiedTags)
-        print(listOfPartsOfSpeechWithWords)
+        print("list of tokens with tags: ", listOfPartsOfSpeechWithWords)
 
         featuresHeading=['sentence number ','PRON','.','word count','DET']
 
@@ -64,8 +65,6 @@ def plagiarismDetection():
         dataTable=np.zeros([0,length],dtype = int)
 
 
-
-        i=1
 
         for i in range(len(listOfPartsOfSpeechWithWords)): #ele in listOfPartsOfSpeechWithWords:
             rowToAdd=np.zeros(length, dtype= float)
@@ -87,7 +86,7 @@ def plagiarismDetection():
                     
             rowToAdd[3]= wordCount[i]/10        
             dataTable=np.vstack((dataTable,rowToAdd))
-        print(dataTable)
+        print("Data Table: ", dataTable)
 
 
         from copy import copy, deepcopy
@@ -96,115 +95,96 @@ def plagiarismDetection():
 
         new=np.delete(new,0,axis=1)
 
+        #X = StandardScaler().fit_transform(new)
 
-        # kmeans=KMeans(n_clusters=5).fit(new)
+        # Compute DBSCAN
+        X=new
+        db = DBSCAN(eps=0.5, min_samples=5).fit(X)
+        #core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+        core_samples_mask= np.zeros(len(db.labels_),dtype=bool)
+        for ele in db.core_sample_indices_:
+            core_samples_mask[ele] = True
+        labels = db.labels_
 
-       # labels=list(kmeans.labels_)
-        #print(labels)
-        #print(kmeans.cluster_centers_)
+        # Number of clusters in labels, ignoring noise if present.
+        n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+        n_noise = list(labels).count(-1)
 
-        #plt.figure(figsize=(10,10))
+        print('Estimated number of clusters: %d' % n_clusters)
+        print('Estimated number of noise points: %d' % n_noise)
 
-        # Scaling the data to bring all the attributes to a comparable level 
-        scaler = StandardScaler() 
-        X_scaled = scaler.fit_transform(new) 
+        # Plot result
+        import matplotlib.pyplot as plt
 
-        # Normalizing the data so that  
-        # the data approximately follows a Gaussian distribution 
-        X_normalized = normalize(X_scaled) 
-
-        # Converting the numpy array into a pandas DataFrame 
-        X_normalized = pd.DataFrame(X_normalized) 
-        pca = PCA(n_components = 2) 
-        X_principal = pca.fit_transform(X_normalized)
-        X_principal = pd.DataFrame(X_principal) 
-        X_principal.columns = ['P1', 'P2'] 
-
-
-        db_default = DBSCAN(eps = 0.0375, min_samples = 3).fit(X_principal) 
-        labels_ = db_default.labels_ 
-
-        labels=list(labels_)
-
-        #plt.subplot(2,2,1)
-        plt.figure(num=0)
-        plt.scatter(new[:,2],new[:,0], c=labels_, cmap='rainbow')
-        plt.title('Pronoun')
-        plt.xlabel('sentence length')
-        plt.ylabel('pronoun')
-        #plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,0], color='black')
-        plt.savefig('static/fig0.png')
-
-        #plt.subplot(2,2,2)
-        plt.figure(num=1)
-        plt.scatter(new[:,2],new[:,1], c=labels_, cmap='rainbow')
-        plt.title('Punctuation')
-        plt.xlabel('sentence length')
-        plt.ylabel('punctuation')
-        #plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,1], color='black')
-        plt.savefig('static/fig1.png')
-
-        #plt.subplot(2,2,3)
-        plt.figure(num=2)
-        plt.scatter(new[:,2],new[:,3], c=labels_, cmap='rainbow')
-        plt.title('Determiner')
-        plt.xlabel('sentence length')
-        plt.ylabel('determiner')
-        #plt.scatter(kmeans.cluster_centers_[:,2] ,kmeans.cluster_centers_[:,3], color='black')
-        plt.savefig('static/fig2.png')
-
-        #plt.tight_layout()
-        #plt.show()
+        # Black removed and is used for noise instead.
+        unique_labels = set(labels)
+        clusterFrequency= np.zeros(n_clusters,dtype='int')
+        colors = [plt.cm.Spectral(each)
+                for each in np.linspace(0, 1, len(unique_labels))]
+        
+        for k, col in zip(unique_labels, colors):
+            if k == -1:
+                # Black used for noise.
+                col = [0, 0, 0, 1]
 
 
+            class_member_mask = (labels == k)
+            if(k!=-1):
+                clusterFrequency[k]=np.count_nonzero(class_member_mask)
 
-        #plt.scatter(kmeans.cluster_centers_[:,0] ,kmeans.cluster_centers_[:,1], color='black')
-
-
-
-        #countiing the frequency
-        zero=one=two=three=four=0
-        for ele  in labels:
-            if(ele==0):
-                zero+=1
-            if(ele==1):
-                one+=1
-            if(ele==2):
-                two+=1
-            if(ele==3):
-                three+=1
-            if(ele==4):
-                four+=1
-        print(zero,one,two,three,four)
-
-        max=0
-        maxf=0
-        if(max<zero):
-            max=zero
-            maxf=0
-        if(max<one):
-            max=one
-            maxf=1
-        if(max<two):
-            max=two
-            maxf=2
-        if(max<three):
-            max=three
-            maxf=3
-        if(max<four):
-            max=four
-            maxf=4
-        print(max,maxf)
-
-
-
-        i=0
-        for ele in labels: 
+            xc = X[class_member_mask & core_samples_mask]
+            xnc = X[class_member_mask & ~core_samples_mask]
             
-            if(ele!=maxf):
-                print(segments[i])
-            i+=1
-    return render_template("output.html", segments=segments, labels=labels, maxf = maxf, fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png')
+            fig0=plt.figure(num=0)
+            plt.title('Pronoun')
+            plt.xlabel('sentence length')
+            plt.ylabel('pronoun')
+            
+            plt.plot(xc[:, 2], xc[:, 0], 'o', markerfacecolor=tuple(col),
+                    markeredgecolor='k', markersize=14)
+            plt.plot(xnc[:, 2], xnc[:, 0], 'o', markerfacecolor=tuple(col),
+                    markeredgecolor='k', markersize=6)
+            plt.savefig('static/fig0.png')
+            
+            
+            fig1=plt.figure(num=1)
+            plt.title('Punctuation')
+            plt.xlabel('sentence length')
+            plt.ylabel('punctuation')
+            
+            plt.plot(xc[:, 2], xc[:, 1], 'o', markerfacecolor=tuple(col),
+                    markeredgecolor='k', markersize=14)
+            plt.plot(xnc[:, 2], xnc[:, 1], 'o', markerfacecolor=tuple(col),
+                    markeredgecolor='k', markersize=6)
+            plt.savefig('static/fig1.png')
 
+
+            fig2=plt.figure(num=2)
+            plt.title('Determiner')
+            plt.xlabel('sentence length')
+            plt.ylabel('determiner')
+            
+            plt.plot(xc[:, 2], xc[:, 3], 'o', markerfacecolor=tuple(col),
+                    markeredgecolor='k', markersize=14)
+            plt.plot(xnc[:, 2], xnc[:, 3], 'o', markerfacecolor=tuple(col),
+                    markeredgecolor='k', markersize=6)
+            plt.savefig('static/fig2.png')
+
+        fig0.clf()
+        fig1.clf()
+        fig2.clf()
+        max=np.argmax(clusterFrequency)
+        for i in range(len(labels)):
+            if(labels[i]==-1):
+                print(segments[i])
+        
+    #return render_template("output.html", segments=segments, labels=labels, maxf = maxf, fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png')
+    return render_template("output.html", segments=segments, labels=labels,max=max,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png' )
 if __name__ == '__main__':
     app.run()
+
+"""# No caching at all for API endpoints.
+@app.after_request
+def add_header(response):
+    response.cache_control.max_age = 300
+    return response"""
