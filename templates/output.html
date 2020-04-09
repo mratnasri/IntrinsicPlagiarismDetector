@@ -10,7 +10,7 @@
     <div style="margin: 2%;">
       <h4>The Possibly plagiarized segments are:</h4>
       <br />
-      {% for i in range(labels|length)%} {% if labels[i]!=max and
+      {% for i in range(labels|length)%} {% if labels[i]!=maxFreqCluster and
       labels[i]!=-1%}
       <h6>{{segments[i]}}</h6>
       {%endif%} {%endfor %}
@@ -20,9 +20,10 @@
       <h4 align="center">Analysis</h4>
       <br />
       <div class="row" style="display: flex; justify-content: space-around;">
-        <img src="{{fig0}}" class="img-responsive" style="width: 30%;" />
-        <img src="{{fig1}}" class="img-responsive" style="width: 30%;" />
-        <img src="{{fig2}}" class="img-responsive" style="width: 30%;" />
+        <img src="{{fig0}}" class="img-responsive" style="width: 25%;" />
+        <img src="{{fig1}}" class="img-responsive" style="width: 25%;" />
+        <img src="{{fig2}}" class="img-responsive" style="width: 25%;" />
+        <img src="{{fig3}}" class="img-responsive" style="width: 25%;" />
       </div>
     </div>
   </body>

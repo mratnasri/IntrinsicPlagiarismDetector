@@ -46,10 +46,17 @@ def plagiarismDetection():
         from nltk.tag import pos_tag, map_tag
         listOfPartsOfSpeechWithWords=[]
         wordCount=[]
+        tokens=[]
+        wordFrequency={}
+        wordFrequencySentenceWise=[]
+        maxFreqWord=''
+        maxFreq=0
+        wordFrequencyRatio=[]
 
 
         for ele in segments: 
             text = nltk.word_tokenize(ele)
+            tokens.append(text)
             count=len(text)
             wordCount.append(count)
             posTagged = pos_tag(text)
@@ -57,22 +64,41 @@ def plagiarismDetection():
             listOfPartsOfSpeechWithWords.append(simplifiedTags)
         print("list of tokens with tags: ", listOfPartsOfSpeechWithWords)
 
-        featuresHeading=['sentence number ','PRON','.','word count','DET']
+        featuresHeading=['sentence number ','PRON','.','word count','DET','word frequency ratio']
+
+        # word Frequency
+        for row in tokens:
+            wfs={}
+            for word in row:
+                wordFrequency[word]=wordFrequency.get(word, 0) + 1
+                wfs[word]=wfs.get(word, 0)+1
+            wordFrequencySentenceWise.append(wfs)
+
+        print("wordFrequencySentenceWise: ", wordFrequencySentenceWise)
+        print("word Frequency: ", wordFrequency)
+        maxFreqWord=max(wordFrequency,key = wordFrequency.get)
+        maxFreq=wordFrequency[maxFreqWord]
+        print("max frequency word: ", maxFreqWord)
+        print("max frequency: ", maxFreq)
 
 
-        #this cell is for adding features heading in dataTable
+        # creating dataTable
         length=len(featuresHeading)
         dataTable=np.zeros([0,length],dtype = int)
 
-
+        from statistics import mean
+        import math
 
         for i in range(len(listOfPartsOfSpeechWithWords)): #ele in listOfPartsOfSpeechWithWords:
             rowToAdd=np.zeros(length, dtype= float)
+            wfrs={}
+            meanwfrs = 0
             rowToAdd[0]=i+1
             #i+=1
             j=0
             for n in listOfPartsOfSpeechWithWords[i]:
                 checkFeature=n[1]
+                word=n[0]
             
                 #print(checkFeature)
                 for feature in featuresHeading:
@@ -83,8 +109,13 @@ def plagiarismDetection():
                     if(checkFeature==feature):
                         rowToAdd[j]+=1
                     j+=1
-                    
-            rowToAdd[3]= wordCount[i]/10        
+
+                wfrs[word]= math.log2(maxFreq/(wordFrequency[word]-wordFrequencySentenceWise[i][word]+1))
+            meanwfrs = mean(wfrs[k] for k in wfrs)
+            wordFrequencyRatio.append(wfrs)
+        
+            rowToAdd[3]= wordCount[i]/10 
+            rowToAdd[5]= meanwfrs       
             dataTable=np.vstack((dataTable,rowToAdd))
         print("Data Table: ", dataTable)
 
@@ -170,19 +201,34 @@ def plagiarismDetection():
                     markeredgecolor='k', markersize=6)
             plt.savefig('static/fig2.png')
 
+
+            fig3=plt.figure(num=3)
+            plt.title('Word Frequency Ratio')
+            plt.xlabel('sentence length')
+            plt.ylabel('word frequency ratio')
+            
+            plt.plot(xc[:, 2], xc[:, 4], 'o', markerfacecolor=tuple(col),
+                    markeredgecolor='k', markersize=14)
+            plt.plot(xnc[:, 2], xnc[:, 4], 'o', markerfacecolor=tuple(col),
+                    markeredgecolor='k', markersize=6)
+            plt.savefig('static/fig3.png')
+
         fig0.clf()
         fig1.clf()
         fig2.clf()
+        fig3.clf()
         if(n_clusters!=0):
-            max=np.argmax(clusterFrequency)
+            maxFreqCluster=np.argmax(clusterFrequency)
         else:
-            max= 0
+            maxFreqCluster= 0
+        
+        print("Noise: ")
         for i in range(len(labels)):
             if(labels[i]==-1):
                 print(segments[i])
         
     #return render_template("output.html", segments=segments, labels=labels, maxf = maxf, fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png')
-    return render_template("output.html", segments=segments, labels=labels,max=max,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png' )
+    return render_template("output.html", segments=segments, labels=labels,maxFreqCluster=maxFreqCluster,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png', fig3 = '/static/fig3.png' )
 if __name__ == '__main__':
     app.run()
 
