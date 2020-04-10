@@ -9,6 +9,8 @@ from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
 from matplotlib import pyplot as plt
 from flask import Flask, render_template, request
+from nltk.corpus import stopwords
+import string
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
@@ -66,12 +68,17 @@ def plagiarismDetection():
 
         featuresHeading=['sentence number ','PRON','.','word count','DET','word frequency ratio']
 
+        stop_words = set(stopwords.words('english')).union(string.punctuation)
+        print("stop words: ",stop_words)
+
         # word Frequency
         for row in tokens:
             wfs={}
             for word in row:
-                wordFrequency[word]=wordFrequency.get(word, 0) + 1
-                wfs[word]=wfs.get(word, 0)+1
+                word1=word.lower()
+                if word1 not in stop_words:
+                    wordFrequency[word1]=wordFrequency.get(word1, 0) + 1
+                    wfs[word1]=wfs.get(word1, 0)+1
             wordFrequencySentenceWise.append(wfs)
 
         print("wordFrequencySentenceWise: ", wordFrequencySentenceWise)
@@ -98,7 +105,7 @@ def plagiarismDetection():
             j=0
             for n in listOfPartsOfSpeechWithWords[i]:
                 checkFeature=n[1]
-                word=n[0]
+                word=n[0].lower()
             
                 #print(checkFeature)
                 for feature in featuresHeading:
@@ -109,9 +116,11 @@ def plagiarismDetection():
                     if(checkFeature==feature):
                         rowToAdd[j]+=1
                     j+=1
-
-                wfrs[word]= math.log2(maxFreq/(wordFrequency[word]-wordFrequencySentenceWise[i][word]+1))
-            meanwfrs = mean(wfrs[k] for k in wfrs)
+                if word not in stop_words:
+                    wfrs[word]= math.log2(maxFreq/(wordFrequency[word]-wordFrequencySentenceWise[i][word]+1))
+            if bool(wfrs):
+                meanwfrs = mean(wfrs[k] for k in wfrs)
+        
             wordFrequencyRatio.append(wfrs)
         
             rowToAdd[3]= wordCount[i]/10 
