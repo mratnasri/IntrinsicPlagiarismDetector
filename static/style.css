@@ -1,0 +1,59 @@
+.main-head{
+    background-color: white; /* mera blue #252b59 */
+    color: rgb(252, 133, 54);
+    text-align: center;
+    text-decoration: none;
+    /* border: 2px solid black;
+    border-radius: 5px; */
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 80px;
+    vertical-align: auto;
+}
+
+.fit-picture {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 95%;
+    height: 450px;
+    background-size: 100% 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+  .sec-head{
+    background-color: white; /* mera blue #252b59 */
+    color: #480b9e;
+    text-align: center;
+    text-decoration: none;
+    /* border: 2px solid black;
+    border-radius: 5px; */
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+.box{
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    user-select: none;
+    width: 60%;
+}
+.input-box{
+    background-color: white;
+    text-align: center;
+    text-decoration: none;
+    border: 5px solid black;
+}
