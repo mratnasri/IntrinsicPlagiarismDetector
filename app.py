@@ -134,11 +134,13 @@ def plagiarismDetection():
 
 
         new=np.delete(new,0,axis=1)
+        updatedDataTable = np.delete(new,3,axis=1)
 
         #X = StandardScaler().fit_transform(new)
 
         # Compute DBSCAN
-        X=new
+        #X=new
+        X= updatedDataTable
         db = DBSCAN(eps=1, min_samples=3).fit(X)
         #core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
         core_samples_mask= np.zeros(len(db.labels_),dtype=bool)
@@ -198,7 +200,7 @@ def plagiarismDetection():
                     markeredgecolor='k', markersize=6)
             plt.savefig('static/fig1.png')
 
-
+            '''
             fig2=plt.figure(num=2)
             plt.title('Determiner')
             plt.xlabel('sentence length')
@@ -209,23 +211,23 @@ def plagiarismDetection():
             plt.plot(xnc[:, 2], xnc[:, 3], 'o', markerfacecolor=tuple(col),
                     markeredgecolor='k', markersize=6)
             plt.savefig('static/fig2.png')
+            '''
 
-
-            fig3=plt.figure(num=3)
+            fig2=plt.figure(num=2)
             plt.title('Word Frequency Ratio')
             plt.xlabel('sentence length')
             plt.ylabel('word frequency ratio')
             
-            plt.plot(xc[:, 2], xc[:, 4], 'o', markerfacecolor=tuple(col),
+            plt.plot(xc[:, 2], xc[:, 3], 'o', markerfacecolor=tuple(col),
                     markeredgecolor='k', markersize=14)
-            plt.plot(xnc[:, 2], xnc[:, 4], 'o', markerfacecolor=tuple(col),
+            plt.plot(xnc[:, 2], xnc[:, 3], 'o', markerfacecolor=tuple(col),
                     markeredgecolor='k', markersize=6)
-            plt.savefig('static/fig3.png')
+            plt.savefig('static/fig2.png')
 
         fig0.clf()
         fig1.clf()
         fig2.clf()
-        fig3.clf()
+        #fig3.clf()
         if(n_clusters!=0):
             maxFreqCluster=np.argmax(clusterFrequency)
         else:
@@ -237,7 +239,7 @@ def plagiarismDetection():
                 print(segments[i])
         
     #return render_template("output.html", segments=segments, labels=labels, maxf = maxf, fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png')
-    return render_template("output.html", segments=segments, labels=labels,maxFreqCluster=maxFreqCluster,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png', fig3 = '/static/fig3.png' )
+    return render_template("output.html", segments=segments, labels=labels,maxFreqCluster=maxFreqCluster,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png' )
 if __name__ == '__main__':
     app.run()
 
