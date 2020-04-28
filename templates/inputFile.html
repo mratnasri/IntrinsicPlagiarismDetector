@@ -8,60 +8,62 @@
     <link rel="stylesheet" href="../static/style.css" />
   </head>
   <body>
-    <div class="main-head">
-      <div style="margin: auto;">Intrinsic Plagiarism Detector</div>
-    </div>
-    <br />
-    <div id="navigation">
-      <a href="/">home</a>
-      <a href="/about">about us</a>
-    </div>
-    <img
-      class="fit-picture"
-      src="..\static\plagiarism-banner1.jpg"
-      alt="plagiarism banner"
-    />
-    <div class="sec-head">
-      <h3>
-        Upload the text file ('.txt' file) which has to be checked for
-        plagiarism.
-      </h3>
-    </div>
-    <br />
-    <div class="box">
-      <form
-        class="form-horizontal"
-        action="/output"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        <!-- col-sm-offset-4 col-sm-3   -->
-        <div class="form-group">
-          <div class="input-box">
-            <input
-              valign="middle"
-              style="
-                border: none;
-                border-style: none;
-                padding-bottom: 0%;
-                padding-top: 3%;
-                margin-bottom: 0%;
-              "
-              placeholder="Upload file"
-              class="form-control"
-              id="file"
-              name="file"
-              type="file"
-              accept=".txt"
-            /><br />
+    <div style="margin: 2%;">
+      <div class="main-head">
+        <div style="margin: auto;">Intrinsic Plagiarism Detector</div>
+      </div>
+      <br />
+      <div id="navigation">
+        <a href="/">home</a>
+        <a href="/about">about us</a>
+      </div>
+      <img
+        class="fit-picture"
+        src="..\static\plagiarism-banner1.jpg"
+        alt="plagiarism banner"
+      />
+      <div class="sec-head" style="margin-top: 3%;">
+        <h3>
+          Upload the text file ('.txt' file) which has to be checked for
+          plagiarism.
+        </h3>
+      </div>
+      <br />
+      <div class="box" style="padding-top: 2%; margin-top: 0%;">
+        <form
+          class="form-horizontal"
+          action="/output"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <!-- col-sm-offset-4 col-sm-3   -->
+          <div class="form-group">
+            <div class="input-box">
+              <input
+                valign="middle"
+                style="
+                  border: none;
+                  border-style: none;
+                  padding-bottom: 0%;
+                  padding-top: 3%;
+                  margin-bottom: 0%;
+                "
+                placeholder="Upload file"
+                class="form-control"
+                id="file"
+                name="file"
+                type="file"
+                accept=".txt"
+              /><br />
+            </div>
           </div>
-        </div>
-        <div class="form-group">
-          <div class="col-sm-offset-5 col-sm-7">
-            <button type="Submit" class="btn btn-default butn">Upload</button>
+          <div class="form-group">
+            <div class="col-sm-offset-5 col-sm-7">
+              <button type="Submit" class="btn btn-default butn">Upload</button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </body>
 </html>
