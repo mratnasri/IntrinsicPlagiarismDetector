@@ -5,10 +5,13 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     />
+    <link rel="stylesheet" href="../static/style.css" />
   </head>
   <body>
     <div style="margin: 2%;">
-      <h4>The Possibly plagiarized segments are:</h4>
+      <div class="sec-head">
+        <h4>The Possibly plagiarized segments are:</h4>
+      </div>
       <br />
       {% for i in range(labels|length)%} {% if labels[i]!=maxFreqCluster and
       labels[i]!=-1%}

@@ -18,6 +18,10 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 def upload():  
     return render_template("inputFile.html")
 
+@app.route('/about')  
+def about():  
+    return render_template("aboutUs.html")
+
 @app.route('/output', methods = ['POST'])
 def plagiarismDetection():
     if request.method == 'POST':  
