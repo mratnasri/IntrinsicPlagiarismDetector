@@ -241,9 +241,9 @@ def plagiarismDetection():
         for i in range(len(labels)):
             if(labels[i]==-1):
                 print(segments[i])
-        
+    print(n_clusters)
     #return render_template("output.html", segments=segments, labels=labels, maxf = maxf, fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png')
-    return render_template("output.html", segments=segments, labels=labels,maxFreqCluster=maxFreqCluster,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png' )
+    return render_template("output.html", segments=segments, labels=labels,maxFreqCluster=maxFreqCluster,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png', n_clusters = n_clusters )
 if __name__ == '__main__':
     app.run()
 

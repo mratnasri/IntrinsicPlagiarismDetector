@@ -13,6 +13,11 @@
         <a href="/">Home</a>
         <a href="/about">About Us</a>
       </div>
+      {%if n_clusters <= 1%}
+      <div class="sec-head">
+        <h2>No Plagiarism detected!</h2>
+      </div>
+      {%else%}
       <div class="sec-head">
         <h2>The Possibly plagiarized segments are:</h2>
       </div>
@@ -22,6 +27,7 @@
         <h6>{{segments[i]}}</h6>
         {%endif%} {%endfor %}
       </div>
+      {%endif%}
     </div>
     <br />
     <div style="margin: 2%;">
