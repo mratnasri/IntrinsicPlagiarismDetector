@@ -7,11 +7,13 @@
     border-radius: 5px; */
     width: 100%;
     margin-top: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     margin-left: auto;
     margin-right: auto;
-    height: 80px;
+    height: 70px;
     vertical-align: auto;
+    font-size: 40px;
+    
 }
 
 .fit-picture {
@@ -24,6 +26,7 @@
     margin-left: auto;
     margin-right: auto;
     display: block;
+    margin-top: -30px;
   }
 
   .sec-head{
@@ -40,6 +43,36 @@
     margin-right: auto;
     
 }
+#navigation{
+    background-color: rgb(252, 133, 54); /* mera blue #252b59 */
+    color: white;
+    text-align: right;
+    text-decoration: none;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 95%;
+    margin-top: 0px;
+    margin-bottom: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 50px;
+    vertical-align: middle;
+    padding-top: 10px;
+    padding-right: 3%;
+}
+
+a{
+        font-weight: bold;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        padding: 15px;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        vertical-align: middle;
+        text-align: center;
+}
+    
 .box{
     padding: 10px;
     border: 1px solid black;
@@ -57,3 +90,15 @@
     text-decoration: none;
     border: 5px solid black;
 }
+.butn {
+    background-color: rgb(252, 133, 54); /* mera blue #252b59 */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    min-width: 15%;
+    
+  }
