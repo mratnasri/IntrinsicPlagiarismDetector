@@ -19,13 +19,16 @@
       </div>
       {%else%}
       <div class="sec-head">
-        <h2>The Possibly plagiarized segments are:</h2>
+        <h2>The possibly plagiarized segments are highlighted:</h2>
+        <h4>(Noisy data is represented with grey colour)</h4>
       </div>
       <div class="content">
-        {% for i in range(labels|length)%} {% if labels[i]!=maxFreqCluster and
-        labels[i]!=-1%}
-        <h6>{{segments[i]}}</h6>
-        {%endif%} {%endfor %}
+        {% for i in range(labels|length)%}
+        <h6>
+          <mark style="background-color: {{colours[i]}};">{{segments[i]}}</mark>
+        </h6>
+
+        {%endfor %}
       </div>
       {%endif%}
     </div>

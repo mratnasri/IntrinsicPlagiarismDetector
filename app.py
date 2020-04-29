@@ -1,16 +1,13 @@
 import re
 import numpy as np
-import pandas as pd
 import nltk
-import os
 from sklearn.cluster import DBSCAN
 from sklearn import metrics
-from sklearn.datasets import make_blobs
-from sklearn.preprocessing import StandardScaler
 from matplotlib import pyplot as plt
 from flask import Flask, render_template, request
 from nltk.corpus import stopwords
 import string
+import matplotlib.colors as mc
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
@@ -36,7 +33,7 @@ def plagiarismDetection():
         #print(item)
         fo.close()
 
-        #Text segmentation (sentence wise, removing all trailing and leading spaces and blank and null entries)
+        #Text segmentation (sentence wise, removing all blank and null entries)
 
         segments=re.split(r'\. |\n',item)
         print(segments)
@@ -167,8 +164,10 @@ def plagiarismDetection():
         clusterFrequency= np.zeros(n_clusters,dtype='int')
         colors = [plt.cm.Spectral(each)
                 for each in np.linspace(0, 1, len(unique_labels))]
+
+        labelColour = list(zip(unique_labels, colors))
         
-        for k, col in zip(unique_labels, colors):
+        for k, col in labelColour:
             if k == -1:
                 # Black used for noise.
                 col = [0, 0, 0, 1]
@@ -227,6 +226,7 @@ def plagiarismDetection():
             plt.plot(xnc[:, 2], xnc[:, 3], 'o', markerfacecolor=tuple(col),
                     markeredgecolor='k', markersize=6)
             plt.savefig('static/fig2.png')
+            print("col:",col,tuple(col))
 
         fig0.clf()
         fig1.clf()
@@ -241,9 +241,21 @@ def plagiarismDetection():
         for i in range(len(labels)):
             if(labels[i]==-1):
                 print(segments[i])
-    print(n_clusters)
+
+        colours=[]
+        for i in range(len(labels)):
+            if labels[i]==maxFreqCluster:
+                colours.append("#FFFFFF")
+            elif labels[i] == -1:
+                colours.append("#808080")
+            else:
+                for k,col in labelColour:
+                    if labels[i]==k:
+                        colours.append(mc.to_hex(col))
+
+
     #return render_template("output.html", segments=segments, labels=labels, maxf = maxf, fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png')
-    return render_template("output.html", segments=segments, labels=labels,maxFreqCluster=maxFreqCluster,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png', n_clusters = n_clusters )
+    return render_template("output.html",segments=segments, labels=labels,labelColour = labelColour, colours = colours, maxFreqCluster=maxFreqCluster,fig0 = '/static/fig0.png', fig1 = '/static/fig1.png', fig2 = '/static/fig2.png', n_clusters = n_clusters )
 if __name__ == '__main__':
     app.run()
 
