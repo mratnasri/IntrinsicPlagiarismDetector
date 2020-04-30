@@ -42,7 +42,7 @@
   margin-right: auto;
 }
 #navigation {
-  background-color: rgb(252, 133, 54); /* mera blue #252b59 */
+  background-color: #f47e2f; /* rgb(252, 133, 54); /* mera blue #252b59 */
   color: white;
   text-align: right;
   text-decoration: none;
@@ -115,4 +115,8 @@ a {
   display: inline-block;
   font-size: 16px;
   min-width: 15%;
+}
+.wrapper {
+  margin: 0%;
+  padding: 0%;
 }

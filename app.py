@@ -69,6 +69,7 @@ def plagiarismDetection():
 
         featuresHeading=['sentence number ','PRON','.','word count','DET','word frequency ratio']
 
+        #set of stop words
         stop_words = set(stopwords.words('english')).union(string.punctuation)
         print("stop words: ",stop_words)
 
@@ -102,18 +103,13 @@ def plagiarismDetection():
             wfrs={}
             meanwfrs = 0
             rowToAdd[0]=i+1
-            #i+=1
             j=0
             for n in listOfPartsOfSpeechWithWords[i]:
                 checkFeature=n[1]
                 word=n[0].lower()
-            
-                #print(checkFeature)
                 for feature in featuresHeading:
                     if j>=length:
                         j=0
-                    
-                    
                     if(checkFeature==feature):
                         rowToAdd[j]+=1
                     j+=1
@@ -121,7 +117,6 @@ def plagiarismDetection():
                     wfrs[word]= math.log2(maxFreq/(wordFrequency[word]-wordFrequencySentenceWise[i][word]+1))
             if bool(wfrs):
                 meanwfrs = mean(wfrs[k] for k in wfrs)
-        
             wordFrequencyRatio.append(wfrs)
         
             rowToAdd[3]= wordCount[i]/10 
@@ -132,15 +127,10 @@ def plagiarismDetection():
 
         from copy import copy, deepcopy
         new = deepcopy(dataTable)
-
-
         new=np.delete(new,0,axis=1)
         updatedDataTable = np.delete(new,3,axis=1)
 
-        #X = StandardScaler().fit_transform(new)
-
         # Compute DBSCAN
-        #X=new
         X= updatedDataTable
         db = DBSCAN(eps=1, min_samples=3).fit(X)
         #core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
@@ -164,14 +154,12 @@ def plagiarismDetection():
         clusterFrequency= np.zeros(n_clusters,dtype='int')
         colors = [plt.cm.Spectral(each)
                 for each in np.linspace(0, 1, len(unique_labels))]
-
         labelColour = list(zip(unique_labels, colors))
         
         for k, col in labelColour:
             if k == -1:
                 # Black used for noise.
                 col = [0, 0, 0, 1]
-
 
             class_member_mask = (labels == k)
             if(k!=-1):
