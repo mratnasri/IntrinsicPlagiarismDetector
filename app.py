@@ -75,7 +75,7 @@ def plagiarismDetection():
 
         # word Frequency
         for row in tokens:
-            wfs={}
+            wfs={} #Dictionary for word frequency of a sentence
             for word in row:
                 word1=word.lower()
                 if word1 not in stop_words:
@@ -138,6 +138,7 @@ def plagiarismDetection():
         for ele in db.core_sample_indices_:
             core_samples_mask[ele] = True
         labels = db.labels_
+        print(labels)
 
         # Number of clusters in labels, ignoring noise if present.
         n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
